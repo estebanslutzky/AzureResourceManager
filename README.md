@@ -1,4 +1,4 @@
-# hello-world
+# Azure Reousrce Manager template
 
 
 Click the button below to deploy
