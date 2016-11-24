@@ -1,0 +1,42 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+  "parameters": {
+    "sizeOf_D_Drive": {
+      "value": "100"
+    },
+    "sizeOf_E_Drive": {
+      "value": "1000"
+    },
+    "sizeOf_C_Drive": {
+      "value": "100"
+    },
+    "adminUsername": {
+      "value": "esteban"
+    },
+    "adminPassword": {
+      "value": "Password1234"
+    },
+    "vmSize": {
+      "value": "Standard_D3_v2"
+    },
+      "sizeOf_F_Drive": {
+          "value": "200"
+      },
+      "sizeOf_K_Drive": {
+          "value": "50"
+      },
+      "sizeOf_L_Drive": {
+          "value": "300"
+      },
+      "sizeOf_M_Drive": {
+          "value": "15"
+      },
+      "sizeOf_O_Drive": {
+          "value": "32"
+      },
+      "sizeOf_P_Drive": {
+          "value": "500"
+      }
+  }
+}
