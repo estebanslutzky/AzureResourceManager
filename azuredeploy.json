@@ -16,85 +16,64 @@
     },
     "vmSize": {
       "type": "string",
+      "defaultValue": "Standard_D2",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2",
+        "Standard_D3",
+        "Standard_D4"
+      ],
       "metadata": {
         "description": "Size of VM"
       }
     },
-    "sizeOf_C_Drive": {
+    "vmName": {
       "type": "string",
       "metadata": {
-        "description": "Size of C:/ drive in GB"
+        "description": "Name Of VM"
       }
     },
-    "sizeOf_D_Drive": {
+    "StorageType": {
       "type": "string",
-      "metadata": {
-        "description": "Size of D:/ drive in GB"
-      }
+      "defaultValue": "Premium_LRS",
+      "allowedValues": [
+        "Standard_LRS",
+        "Premium_LRS"
+      ]
+    },
+    "DiskCache": {
+      "type": "string",
+      "defaultValue": "N",
+      "allowedValues": [
+        "Y",
+        "N"
+      ]
     },
     "sizeOf_E_Drive": {
       "type": "string",
+      "defaultValue": "127",
       "metadata": {
         "description": "Size of E:/ drive in GB"
       }
-    },
-    "sizeOf_F_Drive": {
-      "type": "string",
-      "metadata": {
-        "description": "Size of F:/ drive in GB"
-      }
-    },
-    "sizeOf_K_Drive": {
-      "type": "string",
-      "metadata": {
-        "description": "Size of K:/ drive in GB"
-      }
-    },
-    "sizeOf_L_Drive": {
-      "type": "string",
-      "metadata": {
-        "description": "Size of L:/ drive in GB"
-      }
-    },
-    "sizeOf_M_Drive": {
-      "type": "string",
-      "metadata": {
-        "description": "Size of M:/ drive in GB"
-      }
-    },
-    "sizeOf_O_Drive": {
-      "type": "string",
-      "metadata": {
-        "description": "Size of O:/ drive in GB"
-      }
-    },
-    "sizeOf_P_Drive": {
-      "type": "string",
-      "metadata": {
-        "description": "Size of P:/ drive in GB"
-      }
     }
   },
-    "variables": {
-      "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'saddiskvm')]",
-      "addressPrefix": "10.0.0.0/16",
-      "subnet1Name": "Subnet-1",
-      "subnet1Prefix": "10.0.0.0/24",
-      "vmStorageAccountContainerName": "vhds",
-      "imagePublisher": "MicrosoftWindowsServer",
-      "imageOffer": "WindowsServer",
-      "imageSKU": "2012-Datacenter",
-      "imageVersion": "latest",
-      "publicIPAddressName": "myPublicIP",
-      "publicIPAddressType": "Dynamic",
-      "storageAccountType": "Standard_LRS",
-      "virtualNetworkName": "myVNET",
-      "vmName": "myVM",
-      "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
-      "nicName": "myNIC",
-      "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
-      "apiVersion": "2015-06-15"
-    },
+  "variables": {
+    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'saddiskvm')]",
+    "addressPrefix": "10.0.0.0/16",
+    "subnet1Name": "Subnet-1",
+    "subnet1Prefix": "10.0.0.0/24",
+    "vmStorageAccountContainerName": "vhds",
+    "imagePublisher": "MicrosoftWindowsServer",
+    "imageOffer": "WindowsServer",
+    "imageSKU": "2012-Datacenter",
+    "imageVersion": "latest",
+    "publicIPAddressName": "myPublicIP",
+    "publicIPAddressType": "Dynamic",
+    "virtualNetworkName": "myVNET",
+    "vnetID": "[resourceId('Microsoft.Network/virtualNetworks',variables('virtualNetworkName'))]",
+    "nicName": "myNIC",
+    "subnet1Ref": "[concat(variables('vnetID'),'/subnets/',variables('subnet1Name'))]",
+    "apiVersion": "2015-06-15",
     "resources": [
       {
         "type": "Microsoft.Storage/storageAccounts",
@@ -102,7 +81,7 @@
         "apiVersion": "[variables('apiVersion')]",
         "location": "[resourceGroup().location]",
         "properties": {
-          "accountType": "[variables('storageAccountType')]"
+          "accountType": "[parameters('StorageType')]"
         }
       },
       {
@@ -164,7 +143,7 @@
       {
         "apiVersion": "2015-06-15",
         "type": "Microsoft.Compute/virtualMachines",
-        "name": "[variables('vmName')]",
+        "name": "[parameters('vmName')]",
         "location": "[resourceGroup().location]",
         "dependsOn": [
           "[concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName'))]",
@@ -175,7 +154,7 @@
             "vmSize": "[parameters('vmSize')]"
           },
           "osProfile": {
-            "computerName": "[variables('vmName')]",
+            "computerName": "[parameters('vmName')]",
             "adminUsername": "[parameters('adminUsername')]",
             "adminPassword": "[parameters('adminPassword')]"
           },
@@ -188,74 +167,11 @@
             },
             "dataDisks": [
               {
-                "name": "D_Drive",
-                "diskSizeGB": "[parameters('sizeOf_D_Drive')]",
-                "lun": 0,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk1.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
                 "name": "E_Drive",
                 "diskSizeGB": "[parameters('sizeOf_E_Drive')]",
-                "lun": 1,
+                "lun": 0,
                 "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk2.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
-                "name": "F_Drive",
-                "diskSizeGB": "[parameters('sizeOf_F_Drive')]",
-                "lun": 2,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk3.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
-                "name": "K_Drive",
-                "diskSizeGB": "[parameters('sizeOf_K_Drive')]",
-                "lun": 3,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk4.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
-                "name": "L_Drive",
-                "diskSizeGB": "[parameters('sizeOf_L_Drive')]",
-                "lun": 4,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk5.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
-                "name": "M_Drive",
-                "diskSizeGB": "[parameters('sizeOf_M_Drive')]",
-                "lun": 5,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk6.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
-                "name": "O_Drive",
-                "diskSizeGB": "[parameters('sizeOf_O_Drive')]",
-                "lun": 6,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk7.vhd')]"
-                },
-                "createOption": "Empty"
-              },
-              {
-                "name": "P_Drive",
-                "diskSizeGB": "[parameters('sizeOf_P_Drive')]",
-                "lun": 7,
-                "vhd": {
-                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',variables('vmName'),'dataDisk8.vhd')]"
+                  "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',parameters('vmName'),'dataDisk1.vhd')]",
                 },
                 "createOption": "Empty"
               }
