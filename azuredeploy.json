@@ -67,7 +67,7 @@
     }
   },
   "variables": {
-    "storageAccountName": "[concat(parameters('vmName'),'_sa')]",
+    "storageAccountName": "[concat(parameters('vmName'),'SA')]",
     "addressPrefix": "10.0.0.0/16",
     "nicName": "[concat(parameters('vmName'),'_nic')]",
     "apiVersion": "2015-06-15",
