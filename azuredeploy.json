@@ -52,7 +52,11 @@
     },
     "IPAddressesType": {
       "defaultValue": "Static",
-      "type": "String"
+      "type": "String",
+      "allowedValues": [
+        "Dynamic",
+        "Static"
+      ]
     },
     "IP_Adress": {
       "defaultValue": "10.0.0.4",
