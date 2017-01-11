@@ -46,8 +46,8 @@
       "type":"String",
       "defaultValue": "ReadOnly",
       "allowedValues": [
-        "Standard_D1",
-        "Standard_D2"
+        "ReadOnly",
+        "ReadWrite"
       ],
     },
     "IPAddressesType": {
