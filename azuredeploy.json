@@ -67,12 +67,12 @@
     }
   },
   "variables": {
-    "storageAccountName": "[concat(uniquestring(resourceGroup().id), 'saddiskvm')]",
+    "storageAccountName": "[concat(parameters('vmName'),'_sa')]",
     "addressPrefix": "10.0.0.0/16",
     "nicName": "[concat(parameters('vmName'),'_nic')]",
     "apiVersion": "2015-06-15",
-    "publicIPAddressName": "myPublicIP",
-    "virtualNetworkName": "myVNET",
+    "publicIPAddressName": "[concat(parameters('vmName'),'_PublicIP')]",
+    "virtualNetworkName": "[concat(parameters('vmName'),'_VNET')]",
     "imagePublisher": "MicrosoftWindowsServer",
     "imageOffer": "WindowsServer",
     "imageSKU": "2012-Datacenter",
@@ -111,7 +111,7 @@
           },
           "dataDisks": [
             {
-              "name": "E_Drive",
+              "name": "[concat(parameters('vmName'),'_E_Drive')]",
               "diskSizeGB": "[parameters('sizeOf_E_Drive')]",
               "lun": 0,
               "caching": "ReadOnly",
@@ -122,7 +122,7 @@
             }
           ],
           "osDisk": {
-            "name": "C_Drive",
+            "name": "[concat(parameters('vmName'),'_C_Drive')]",
             "vhd": {
               "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/','osDisk1.vhd')]"
             },
