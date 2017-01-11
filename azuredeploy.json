@@ -42,6 +42,14 @@
         "Premium_LRS"
       ]
     },
+    "DiskCaching": {
+      "type":"String",
+      "defaultValue": "ReadOnly",
+      "allowedValues": [
+        "Standard_D1",
+        "Standard_D2"
+      ],
+    },
     "IPAddressesType": {
       "defaultValue": "Static",
       "type": "String"
@@ -49,14 +57,6 @@
     "IP_Adress": {
       "defaultValue": "10.0.0.4",
       "type": "String"
-    },
-    "DiskCache": {
-      "type": "string",
-      "defaultValue": "N",
-      "allowedValues": [
-        "Y",
-        "N"
-      ]
     },
     "sizeOf_E_Drive": {
       "type": "string",
@@ -113,6 +113,7 @@
               "name": "E_Drive",
               "diskSizeGB": "[parameters('sizeOf_E_Drive')]",
               "lun": 0,
+              "caching": "ReadOnly",
               "vhd": {
                 "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/',parameters('vmName'),'dataDisk1.vhd')]"
               },
@@ -124,7 +125,7 @@
             "vhd": {
               "uri": "[concat(reference(concat('Microsoft.Storage/storageAccounts/', variables('storageAccountName')), variables('apiVersion')).primaryEndpoints.blob, variables('vmStorageAccountContainerName'),'/','osDisk1.vhd')]"
             },
-            "caching": "ReadWrite",
+            "caching": "[parameters('DiskCaching')]",
             "createOption": "FromImage"
           }
         },
